@@ -39,8 +39,3 @@
 .examResult{
     color : red;
 }
-
-.examOk{color : darkgreen};
-.examKo{color : red};
-.examPending{color :yellowgreen};
-.examDafault{color : gray};
