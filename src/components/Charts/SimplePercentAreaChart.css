@@ -1,0 +1,11 @@
+.chartContainer{
+    width: 600px;
+    margin:auto;
+}
+
+.chartElement{
+    
+    padding-top:1em;
+    height: 3em;
+    display: inline-block;
+}

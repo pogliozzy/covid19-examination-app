@@ -1,0 +1,47 @@
+.examRow {
+    /*  width : 80% */
+
+    display:table-row;
+    width:auto;
+}
+
+.examHeader{
+    float:left;
+    /*padding:10px;*/
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display:table-column;
+    width:25%;
+    background-color:#ccc;
+}
+
+.examCell {
+    float:left;
+    /*padding:10px;*/
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display:table-column;
+    width:25%;
+    background-color:#ccc;
+}
+
+.examDate{
+    color : blue;    
+}
+
+.examId{
+    color : black;
+}
+
+.locationId{
+    color : black;
+}
+
+.examResult{
+    color : red;
+}
+
+.examOk{color : darkgreen};
+.examKo{color : red};
+.examPending{color :yellowgreen};
+.examDafault{color : gray};

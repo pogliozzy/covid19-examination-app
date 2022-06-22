@@ -1,0 +1,8 @@
+.examTable {
+    margin: auto;
+    display:  table;
+    width:80%;
+    background-color:#eee;
+    border:1px solid  #666666;
+    border-spacing:5px;
+} 
