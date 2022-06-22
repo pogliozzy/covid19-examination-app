@@ -10,6 +10,7 @@ import ExaminationApiService from "./services/ExaminationApiService";
 import Exam from "./models/exam";
 
 import data from "./mockData/db.json";
+import examParser from "./utils/examParser";
 
 function App() {
   /* stati */
@@ -17,10 +18,6 @@ function App() {
   const [location, setLocation] = useState<number>(0);
   const [showChart, setShowChart] = useState<Boolean>(false);
   //const mockApi = true;
-
-  /**
-   *  Get Examinations by Location
-   */
 
   /**
    *  Get All Examination
@@ -31,37 +28,22 @@ function App() {
 
     setLocation(0);
 
-    const resultList = resultData.map((item) => {
-      const exObj = {} as Exam;
-      exObj.utcdate = item.date;
-      exObj.date = new Date(item.date);
-      exObj.id = item.id;
-      exObj.locationId = item.locationId;
-      exObj.result = item.result;
-
-      return exObj;
-    });
+    const resultList = examParser(resultData);
 
     return resultList;
   };
+
+  /**
+   *  Get Examinations by Location
+   */
 
   const getDataByLoc = (locationId: number) => {
     const resultData = data.filter((obj) => {
       return obj.locationId === locationId;
     });
 
-    const resultList = resultData.map((item) => {
-      const exObj = {} as Exam;
-      exObj.utcdate = item.date;
-      exObj.date = new Date(item.date);
-      exObj.id = item.id;
-      exObj.locationId = item.locationId;
-      exObj.result = item.result;
+    const resultList = examParser(resultData);
 
-      return exObj;
-    });
-
-    console.log("Lista filtrata", resultList);
     return resultList;
   };
 
@@ -85,7 +67,7 @@ function App() {
   const changeLocationHandler = (event: React.FormEvent<HTMLSelectElement>) => {
     setLocation(Number(event.currentTarget.value));
     const newLocation = Number(event.currentTarget.value);
-    console.log("la location è ", Number(event.currentTarget.value), location);
+    // console.log("Location ", Number(event.currentTarget.value), location);
 
     if (newLocation > 0) {
       setExams(getDataByLoc(newLocation));
@@ -137,9 +119,7 @@ function App() {
         </button>
       </section>
       <section className="stats">
-        {showChart && (
-          <SimplePercentAreaChart items={exams} />
-        )}
+        {showChart && <SimplePercentAreaChart items={exams} />}
       </section>
       <section>{exams.length > 0 && <ExaminationList items={exams} />}</section>
       <section>{exams.length == 0 && <h1>{labels.NO_DATA}</h1>}</section>

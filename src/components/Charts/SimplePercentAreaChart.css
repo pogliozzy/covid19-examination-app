@@ -1,11 +1,11 @@
 .chartContainer{
-    width: 600px;
+    width: 800px;
     margin:auto;
 }
 
-.chartElement{
-    
-    padding-top:1em;
+.chartElement{   
+    overflow: hidden;     
     height: 3em;
+    line-height: 3em;
     display: inline-block;
 }
