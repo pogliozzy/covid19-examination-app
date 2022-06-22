@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Covid19 Examination App , based on "Getting Started with Create React App"
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using `npx create-react-app . --template typescript`
+
+Please, run `npm install` to download, install or update all dependencies.
 
 ## Available Scripts
 
