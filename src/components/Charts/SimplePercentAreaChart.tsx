@@ -6,33 +6,13 @@ import './SimplePercentAreaChart.css';
 
 const SimplePercentAreaChart: React.FC<{items: Exam[]}> = (props) => {
 
-    const labels = Array.from(new Set(props.items.map((item: any) => item.result))); 
+    const exams = props.items;
 
-    let colorCount = 1;
-    let totalPercentage = 0;
-    let tmpPercentage = 0;
+   
 
-    let graphDetails = labels.map((label:string) => {
-      const value = props.items.filter(item => item.result === label).length;
-      let percentage = 0;
-      if(value > 0){
-        tmpPercentage = Math.round((value / props.items.length) * 100) ;
-      }
-      totalPercentage+=tmpPercentage;
-
-      if(totalPercentage>100){
-        let diff = totalPercentage - 100;
-        tmpPercentage = tmpPercentage - diff;
-      }
-
-      percentage = tmpPercentage;
-
-      colorCount++;
-      return {'label':label , 'value': percentage + '%', 'percentage': percentage ,'color': colorCount%2 ==0 ? 'lightcyan':'lightgreen'}; 
-  
-    });
-      
-    //console.log("dati charts", pairs);
+    
+   
+    const graphDetails = getGraphDetails(exams);
 
     return (
         <div className="chartContainer">            
@@ -41,6 +21,36 @@ const SimplePercentAreaChart: React.FC<{items: Exam[]}> = (props) => {
         ))}
         </div>
     );
+}
+
+export const getGraphDetails = ( exams:Exam[]) => {
+
+  let colorCount = 1;
+  let totalPercentage = 0;
+  let tmpPercentage = 0;
+
+  const labels = Array.from(new Set(exams.map((item: any) => item.result))); 
+
+  let graphDetails = labels.map((label:string) => {
+    const value = exams.filter(item => item.result === label).length;
+    let percentage = 0;
+    if(value > 0){
+      tmpPercentage = Math.round((value / exams.length) * 100) ;
+    }
+    totalPercentage+=tmpPercentage;
+
+    if(totalPercentage>100){
+      let diff = totalPercentage - 100;
+      tmpPercentage = tmpPercentage - diff;
+    }
+
+    percentage = tmpPercentage;
+
+    colorCount++;
+    return {'label':label , 'value': percentage + '%', 'percentage': percentage ,'color': colorCount%2 ==0 ? 'lightcyan':'lightgreen'}; 
+    });
+
+    return graphDetails;
 }
 
 export default SimplePercentAreaChart;
