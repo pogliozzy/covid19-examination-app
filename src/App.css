@@ -2,6 +2,8 @@
   text-align: center;
 }
 
+
+/*
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,10 +37,15 @@
   to {
     transform: rotate(360deg);
   }
+} */
+.stats{
+  padding: 1.2em
 }
+
 
 .navigation{
   margin:auto;
+  margin-top:1em;
   width: 600px;
   box-shadow:inset 0px 1px 0px 0px #ffffff;
 	background:linear-gradient(to bottom, #ffffff 5%, #555 100%);

@@ -1,162 +1,148 @@
-import React , {useState} from 'react';
+import React, { useState } from "react";
 
-import './App.css';
-import ExaminationList from './components/Examination/ExaminationList';
-import SimplePercentAreaChart from './components/Charts/SimplePercentAreaChart';
-import ChartPair from './models/chartElement';
-import ExaminationApiService from './services/ExaminationApiService';
+import "./App.css";
+import ExaminationList from "./components/Examination/ExaminationList";
+import SimplePercentAreaChart from "./components/Charts/SimplePercentAreaChart";
+import * as labels from "./utils/textLabels";
 
+import ExaminationApiService from "./services/ExaminationApiService";
 
-import Exam from './models/exam';
+import Exam from "./models/exam";
 
-import data from './mockData/db.json';
-
+import data from "./mockData/db.json";
 
 function App() {
-
-  /* stato */
-  const [exams , setExams] = useState<Exam[]>([]);
+  /* stati */
+  const [exams, setExams] = useState<Exam[]>([]);
   const [location, setLocation] = useState<number>(0);
-  const [showChart, setShowChart] = useState<Boolean>(false)
-  //const mockApi = true; 
+  const [showChart, setShowChart] = useState<Boolean>(false);
+  //const mockApi = true;
 
-
-  /** 
+  /**
    *  Get Examinations by Location
    */
 
-const getDataByLoc = (locationId : number ) => {
-    
-    const resultData = data.filter(obj => {
-            return obj.locationId === locationId;          
-          });
-    
-    const resultList = resultData.map(item => {
-      const exObj= {} as Exam;
-      exObj.date = item.date;
-      exObj.id = item.id;
-      exObj.locationId = item.locationId;
-      exObj.result = item.result;
-    
-      return exObj; });
-
-
-      console.log("Lista filtrata",resultList);
-    return (resultList);            
-};
-
-/** 
+  /**
    *  Get All Examination
    */
 
-const getAllData = () => {
-  
-     const resultData = data
-     
-     setLocation(0);  
+  const getAllData = () => {
+    const resultData = data;
 
-  const resultList = resultData.map(item => {
-    const exObj= {} as Exam;
-    exObj.date = item.date;
-    exObj.id = item.id;
-    exObj.locationId = item.locationId;
-    exObj.result = item.result;
-  
-    return exObj; });
-    
-  return (resultList); 
-};
+    setLocation(0);
+
+    const resultList = resultData.map((item) => {
+      const exObj = {} as Exam;
+      exObj.utcdate = item.date;
+      exObj.date = new Date(item.date);
+      exObj.id = item.id;
+      exObj.locationId = item.locationId;
+      exObj.result = item.result;
+
+      return exObj;
+    });
+
+    return resultList;
+  };
+
+  const getDataByLoc = (locationId: number) => {
+    const resultData = data.filter((obj) => {
+      return obj.locationId === locationId;
+    });
+
+    const resultList = resultData.map((item) => {
+      const exObj = {} as Exam;
+      exObj.utcdate = item.date;
+      exObj.date = new Date(item.date);
+      exObj.id = item.id;
+      exObj.locationId = item.locationId;
+      exObj.result = item.result;
+
+      return exObj;
+    });
+
+    console.log("Lista filtrata", resultList);
+    return resultList;
+  };
 
   const fetchData = () => {
-    setExams(getAllData());      
-  }
+    setExams(getAllData());
+  };
 
   const fetchDataByLocation = () => {
-    setExams(getDataByLoc(location));  
-  }
-
-  const showStats = () => {
-
-  }
-
+    setExams(getDataByLoc(location));
+  };
 
   /**
    * Location dropdown
    */
 
-  const locations = data.map(item => item.locationId).filter((value, index, self) => self.indexOf(value) === index).sort((a,b) => a-b);
-   
-  const changeLocationHandler = (event : React.FormEvent<HTMLSelectElement>) => {    
-  
-    setLocation(Number(event.currentTarget.value));
-    const newLocation =  Number(event.currentTarget.value);
-    console.log("la location è ", Number(event.currentTarget.value) , location);
-    
-    if(newLocation>0){
-      setExams(getDataByLoc(newLocation)); 
-    }else{ 
-      setExams(getAllData());   
-    }
-  }
+  const locations = data
+    .map((item) => item.locationId)
+    .filter((value, index, self) => self.indexOf(value) === index)
+    .sort((a, b) => a - b);
 
-  const options = locations.map((numero) => 
-    <option key={numero} value={numero}>{numero}</option>
+  const changeLocationHandler = (event: React.FormEvent<HTMLSelectElement>) => {
+    setLocation(Number(event.currentTarget.value));
+    const newLocation = Number(event.currentTarget.value);
+    console.log("la location è ", Number(event.currentTarget.value), location);
+
+    if (newLocation > 0) {
+      setExams(getDataByLoc(newLocation));
+    } else {
+      setExams(getAllData());
+    }
+  };
+
+  const options = locations.map((numero) => (
+    <option key={numero} value={numero}>
+      {numero}
+    </option>
+  ));
+
+  const dropdown = (
+    <select
+      className="selectButton"
+      onChange={changeLocationHandler}
+      value={location}
+    >
+      <option key="0" value="0">
+        All
+      </option>
+      {options}
+    </select>
   );
 
-  const dropdown = <select className="selectButton" onChange={changeLocationHandler} value={location} >        
-    <option key="0" value="0">All</option>
-    {options}
-  </select>;
-
-  /** Charts  
-   * SPOSTO LOGICA NEL COMPONENTE 
-   * lascio gestione stato
+  /** Charts
+   * Sposto logica nel componente, lascio gestione stato
    * */
-  
-    const toggleChart = () =>{
-      showChart? setShowChart(false):setShowChart(true);
-    }
 
-  /*
-
-  const labels = Array.from(new Set(data.map((item: any) => item.result))); //data.map(item => item.result.filter((value, index, self) => self.indexOf(value) === index).sort();
-
-
-  let colorCount = 1;
-
-  const pairs = labels.map((label:string) => {
-    const value = data.filter(item => item.result === label).length;
-    let percentage = '0%';
-    if(value > 0){
-      percentage = Math.round((value / data.length) * 100) + '%';
-    }
-    colorCount++;
-    return {'label':label , 'value': percentage, 'color': colorCount%2 ==0 ? 'lightcyan':'lightcoral'}; 
-
-  });
-
-  console.log("dati charts", pairs);
-*/
+  const toggleChart = () => {
+    showChart ? setShowChart(false) : setShowChart(true);
+  };
 
   /** Main App */
-   /** <label className="description">Change Location</label> */
 
   return (
     <div className="App">
       <section className="navigation">
-        <button className="selectButton" onClick={fetchData} > All Exams </button>   
+        <button className="selectButton" onClick={fetchData}>
+          {" "}
+          {labels.ALL_EXAM_BUTTON}{" "}
+        </button>
         {dropdown}
-        <button className="selectButton" onClick={toggleChart} > Stats </button> 
+        <button className="selectButton" onClick={toggleChart}>
+          {" "}
+          {labels.STATS_BUTTON}{" "}
+        </button>
       </section>
-      <section className="stats" >
-           {showChart && <SimplePercentAreaChart items={exams.length>0?exams:data}/>}          
-      </section>  
-      <section>
-        {exams.length > 0 && <ExaminationList items = {exams} />}
+      <section className="stats">
+        {showChart && (
+          <SimplePercentAreaChart items={exams} />
+        )}
       </section>
-      <section>
-        {exams.length == 0 && <h1>No data to display</h1>}
-      </section>         
+      <section>{exams.length > 0 && <ExaminationList items={exams} />}</section>
+      <section>{exams.length == 0 && <h1>{labels.NO_DATA}</h1>}</section>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 interface Exam {
     id: number;
-    date: string;
+    utcdate: string;
+    date: Date;
     locationId: number;
     result: string;
 }

@@ -25,7 +25,8 @@ const getData = (locationId : number) => {
           let resultList = [];
           resultList = resultData.map(item => {
             const exObj= {} as Exam;
-            exObj.date = item.date;
+            exObj.utcdate = item.date;
+            exObj.date = new Date(item.date);
             exObj.id = item.id;
             exObj.locationId = item.locationId;
             exObj.result = item.result;
@@ -60,7 +61,8 @@ const getData = (locationId : number) => {
             let resultList = [];
             resultList = resultData.map(item => {
               const exObj= {} as Exam;
-              exObj.date = item.date;
+              exObj.utcdate = item.date;
+              exObj.date = new Date(item.date);
               exObj.id = item.id;
               exObj.locationId = item.locationId;
               exObj.result = item.result;
