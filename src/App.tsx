@@ -17,7 +17,7 @@ function App() {
   /* stato */
   const [exams , setExams] = useState<Exam[]>([]);
   const [location, setLocation] = useState<number>(0);
-  //const [dropdownValue, setDropdownValue] = useState<number>(0);
+  const [showChart, setShowChart] = useState<Boolean>(false)
   //const mockApi = true; 
 
 
@@ -108,7 +108,17 @@ const getAllData = () => {
     {options}
   </select>;
 
-  /** Charts */
+  /** Charts  
+   * SPOSTO LOGICA NEL COMPONENTE 
+   * lascio gestione stato
+   * */
+  
+    const toggleChart = () =>{
+      showChart? setShowChart(false):setShowChart(true);
+    }
+
+  /*
+
   const labels = Array.from(new Set(data.map((item: any) => item.result))); //data.map(item => item.result.filter((value, index, self) => self.indexOf(value) === index).sort();
 
 
@@ -126,7 +136,7 @@ const getAllData = () => {
   });
 
   console.log("dati charts", pairs);
-
+*/
 
   /** Main App */
    /** <label className="description">Change Location</label> */
@@ -136,14 +146,17 @@ const getAllData = () => {
       <section className="navigation">
         <button className="selectButton" onClick={fetchData} > All Exams </button>   
         {dropdown}
-        <button className="selectButton" onClick={showStats} > Stats </button> 
+        <button className="selectButton" onClick={toggleChart} > Stats </button> 
+      </section>
+      <section className="stats" >
+           {showChart && <SimplePercentAreaChart items={exams.length>0?exams:data}/>}          
+      </section>  
+      <section>
+        {exams.length > 0 && <ExaminationList items = {exams} />}
       </section>
       <section>
-        <ExaminationList items = {exams} />
-      </section>
-      <section className="stats">
-          <SimplePercentAreaChart items={pairs}/>
-      </section>  
+        {exams.length == 0 && <h1>No data to display</h1>}
+      </section>         
     </div>
   );
 }
